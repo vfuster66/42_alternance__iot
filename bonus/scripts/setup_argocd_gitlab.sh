@@ -9,9 +9,10 @@ echo "Mot de passe ArgoCD : $ARGO_PWD"
 echo "Création de l'application ArgoCD pour GitLab..."
 
 # Demander le nom du dépôt et le token GitLab
-read -p "Entrez le nom de votre dépôt GitLab (par exemple votre-login-config) : " REPO_NAME
+read -p "Entrez le nom de votre dépôt GitLab (ex: root/vfuster-config) : " REPO_NAME
 read -p "Entrez votre token GitLab : " GITLAB_TOKEN
 GITLAB_USER="oauth2"
+GITLAB_URL="http://gitlab.gitlab.svc.cluster.local/${REPO_NAME}.git"
 
 echo "Configuration des identifiants GitLab pour ArgoCD..."
 
@@ -33,7 +34,7 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   type: git
-  url: http://gitlab.gitlab.svc.cluster.local/${REPO_NAME}.git
+  url: ${GITLAB_URL}
   username: ${GITLAB_USER}
   password: ${GITLAB_TOKEN}
 EOF
@@ -50,7 +51,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://gitlab.gitlab.svc.cluster.local/${REPO_NAME}.git
+    repoURL: ${GITLAB_URL}
     targetRevision: main
     path: kubernetes
   destination:
@@ -66,5 +67,3 @@ EOF
 kubectl apply -f argocd-app-gitlab.yaml
 
 echo "Configuration ArgoCD terminée !"
-echo "Vous pouvez maintenant accéder à ArgoCD pour voir votre application."
-

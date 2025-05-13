@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: http://gitlab.gitlab.svc.cluster.local/gitlab-instance-128921ea/vfuster-config.git
+    repoURL: http://localhost:8929/root/vfuster-config.git
     targetRevision: main
     path: kubernetes
   destination:
